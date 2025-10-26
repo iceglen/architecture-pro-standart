@@ -1,0 +1,20 @@
+@startuml Standart Bank System Context Diagram
+!include <C4/C4_Context>
+
+title System Context Diagram for credit application processing
+
+Person(user, "User", "Interacts with bank")
+
+System(system, "Standart Bank System")
+
+System_Ext(sms_gateway, "SMS provider")
+System_Ext(credit_system, "Credit conveyor system")
+System_Ext(scoring_system, "Client's scoring system")
+
+Rel(user, system, "New application through Web Site/Internet Bank")
+
+Rel(system, credit_system, "Passing application to the credit conveyor system")
+Rel(credit_system, scoring_system, "Requests client's score from the scoring system")
+Rel(system, sms_gateway, "Sends SMS notifications (accept/reject/clarification request)")
+
+@enduml

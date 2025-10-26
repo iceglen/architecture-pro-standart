@@ -1,0 +1,79 @@
+@startgantt
+sunday are closed
+monday are closed
+
+Project starts 2025-11-03
+
+-- Инфраструктура и безопасность --
+[Настройка TLS и шифрования] as [INFRA1] lasts 5 days
+[INFRA1] starts 2025-11-03
+
+-- Микросервис ставок --
+[Разработка микросервиса ставок] as [RATES1] lasts 10 days
+[RATES1] starts 2025-11-03
+
+[Интеграция с АБС (асинхронно)] as [RATES2] lasts 5 days
+[RATES2] starts at [RATES1]'s end
+
+[Кэширование и мониторинг] as [RATES3] lasts 3 days
+[RATES3] starts at [RATES1]'s end
+
+-- Сайт --
+[Форма заявки на сайте] as [SITE1] lasts 5 days
+[SITE1] starts 2025-11-10
+
+[Интеграция с сервисом ставок] as [SITE2] lasts 3 days
+[SITE2] starts at [SITE1]'s end
+
+[Передача заявок в кол-центр] as [SITE3] lasts 4 days
+[SITE3] starts at [SITE2]'s end
+
+-- Интернет-банк --
+[Форма заявки в ИБ] as [IB1] lasts 7 days
+[IB1] starts 2025-11-10
+
+[Интеграция с сервисом ставок] as [IB2] lasts 3 days
+[IB2] starts at [IB1]'s end
+
+[Отправка заявок в буфер] as [IB3] lasts 5 days
+[IB3] starts at [IB2]'s end
+
+-- Буферный сервис --
+[Создание буферного сервиса] as [BUF1] lasts 8 days
+[BUF1] starts 2025-11-05
+
+[Интеграция с АБС через Service Broker] as [BUF2] lasts 5 days
+[BUF2] starts at [BUF1]'s end
+
+[Интеграция с СМС-шлюзом] as [BUF3] lasts 3 days
+[BUF3] starts at [BUF2]'s end
+
+-- АБС --
+[Приём заявок из буфера] as [ABS1] lasts 6 days
+[ABS1] starts at [BUF2]'s end
+
+[Поддержка сквозного ID] as [ABS2] lasts 2 days
+[ABS2] starts at [ABS1]'s end
+
+-- Кол-центр (внутренний) --
+[Интеграция с сервисом ставок] as [CC1] lasts 4 days
+[CC1] starts at [RATES1]'s end
+
+[Приём заявок с сайта] as [CC2] lasts 3 days
+[CC2] starts at [CC1]'s end
+
+-- Партнёрский кол-центр --
+[Настройка выгрузки файлов] as [PART1] lasts 3 days
+[PART1] starts at [RATES2]'s end
+
+[Передача файлов (SFTP/email)] as [PART2] lasts 2 days
+[PART2] starts at [PART1]'s end
+
+-- Тестирование и запуск --
+[Интеграционное тестирование] as [TEST] lasts 7 days
+[TEST] starts at [PART2]'s end
+
+[Пилотный запуск MVP] as [GO] lasts 2 days
+[GO] starts at [TEST]'s end
+
+@endgantt

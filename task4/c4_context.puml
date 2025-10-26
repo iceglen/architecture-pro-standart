@@ -1,0 +1,18 @@
+@startuml Standart Bank System Context Diagram
+!include <C4/C4_Context>
+
+title System Context Diagram for rates providing to the call center
+
+Person(user, "User", "Interacts with bank")
+
+System(system, "Standart Bank System")
+
+System_Ext(call_center, "Call-center")
+System_Ext(sms_gateway, "SMS provider")
+
+Rel(user, system, "Uses", "Web Site/Internet Bank")
+Rel(user, call_center, "Calls", "Trying to clarify rates")
+Rel(call_center, system, "Fetching rates from bank system")
+Rel(system, sms_gateway, "Sends SMS notifications")
+
+@enduml

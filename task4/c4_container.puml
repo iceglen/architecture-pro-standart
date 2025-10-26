@@ -1,0 +1,38 @@
+@startuml Standart Bank System Container Diagram
+!include <C4/C4_Container>
+
+Person(user, "Client", "Accessing bank system through web site or internet banking system")
+
+System_Boundary(bank_system, "Standart Bank System") {
+    Container(api_gateway, "API Gateway")
+    ContainerQueue(service_broker, "Service Broker")
+    Container(legacy_abs, "Legacy ABS")
+    Container(rates_service, "Rates service")
+}
+
+System_Boundary(call_center, "Call center system (internal and external)") {
+    Container(call_center_int, "Internal call center")
+    Container(call_center_ext, "Partnered call center")
+}
+
+System_Ext(web, "Web site")
+System_Ext(inet_bank, "Internet Banking")
+System_Ext(sftp_share, "SFTP share")
+
+Rel(user, web, "Looking for deposit rates through web site")
+Rel(user, inet_bank, "Looking for deposit rates through internet banking")
+Rel(user, call_center, "Clarifying deposit rates through call center")
+
+Rel(web, api_gateway, "Accessing system through gateway")
+Rel(inet_bank, api_gateway, "Accessing system through gateway")
+
+Rel(call_center_int, api_gateway, "Fetching rates through gateway")
+Rel(api_gateway, rates_service, "Fetching rates through service")
+Rel(rates_service, service_broker, "Fetching rates from ABS system (async)")
+
+Rel(call_center_ext, sftp_share, "Fetching rates through SFTP share")
+Rel(rates_service, sftp_share, "Uploading rates on SFTP share")
+
+Rel(legacy_abs, service_broker, "Listening for rate request from service broker")
+
+@enduml

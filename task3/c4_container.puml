@@ -1,0 +1,33 @@
+@startuml Standart Bank System Container Diagram
+!include <C4/C4_Container>
+
+Person(user, "Client", "Accessing bank system through web site or internet banking system")
+
+System_Boundary(bank_system, "Standart Bank System") {
+    Container(api_gateway, "API Gateway")
+    Container(application_service, "Application service")
+    ContainerQueue(service_broker, "Service Broker")
+    Container(legacy_abs, "Legacy ABS")
+    Container(credit_department, "Credit Department")
+}
+
+System_Ext(web, "Web site")
+System_Ext(inet_bank, "Internet Banking")
+System_Ext(sms_gateway, "SMS Gateway")
+System_Ext(call_center, "Call Center")
+
+Rel(user, web, "Creates deposit application through web site")
+Rel(user, inet_bank, "Creates deposit application through internet banking")
+Rel(user, call_center, "Creates deposit application through call center")
+
+Rel(web, api_gateway, "Accessing system through gateway")
+Rel(inet_bank, api_gateway, "Accessing system through gateway")
+Rel(call_center, api_gateway, "Processing application through gateway")
+
+Rel(api_gateway, application_service, "Invoking application creation process")
+Rel(application_service, service_broker, "Buffering application request")
+Rel(legacy_abs, service_broker, "Fetching application request from service broker")
+Rel(legacy_abs, credit_department, "Fetching client's deposit rate")
+Rel(legacy_abs, sms_gateway, "Sending SMS notification")
+
+@enduml
