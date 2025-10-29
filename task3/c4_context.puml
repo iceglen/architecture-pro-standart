@@ -1,0 +1,17 @@
+@startuml Standart Bank System Context Diagram
+!include <C4/C4_Context>
+
+title System Context Diagram for MVP with deposits
+
+Person(user, "User", "Interacts with bank system")
+
+System(system, "Standart Bank System")
+
+System_Ext(call_center, "Call-center")
+System_Ext(sms_gateway, "SMS provider")
+
+Rel(user, system, "Uses", "Web Site/Internet Bank")
+Rel(system, call_center, "Different scripts describing client processing")
+Rel(system, sms_gateway, "Sends SMS notifications")
+
+@enduml

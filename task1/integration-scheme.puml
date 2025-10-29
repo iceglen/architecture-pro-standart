@@ -1,0 +1,87 @@
+@startuml
+hide empty description
+
+[*] --> deposit
+
+state deposit {
+    deposit: "Оформление депозита"
+
+    deposit --> preApprovedDeposit
+
+    state preApprovedDeposit {
+        preApprovedDeposit: "Оформление заявки на депозит через кол-центр"
+
+        state "Кол-центр" as callCenter
+        state "Отделение банка (фронт-офис)" as frontOffice1
+        state "Операционный офис банка (бэк-офис)" as backOffice1
+        state "Автоматизированная банковская система" as ABS1
+        state "Шлюз для отправки смс" as smsGateway
+
+        preApprovedDeposit --> callCenter : принятие заявки на депозит через кол-центр
+        callCenter --> ABS1 : внесение заявки в систему
+        ABS1 --> backOffice1 : обработка заявки
+        backOffice1 --> ABS1 : определение ставки для клиента1
+        ABS1 --> smsGateway : отправка оповещение со ставкой клиента
+
+        state acceptPreApprovedDepositRate <<choice>>
+
+        smsGateway --> acceptPreApprovedDepositRate : принятие решения по предложенной ставке на депозит
+        acceptPreApprovedDepositRate --> frontOffice1 : согласие по заявке на депозит
+        frontOffice1 --> ABS1 : оформление депозита
+
+        acceptPreApprovedDepositRate --> [*] : отказ
+    }
+
+    deposit --> frontOfficeVisit
+
+    state frontOfficeVisit {
+        frontOfficeVisit: "Оформление заявки на депозит через фронт-офис"
+
+        state "Отделение банка (фронт-офис)" as frontOffice
+        state "Операционный офис банка (бэк-офис)" as backOffice
+        state "Отдел кредитования" as creditDepartment
+        state "Автоматизированная банковская система" as ABS2
+
+        frontOfficeVisit --> frontOffice : принятие заявки на депозит через фронт-офис
+
+        frontOffice --> backOffice : отправка заявки на проверку
+        backOffice --> creditDepartment : отправка заявки на проверку
+        creditDepartment --> ABS2: обработка заявки
+        ABS2 --> creditDepartment : выдача расчета ставки клиента
+        creditDepartment --> backOffice : отправка результата проверки
+        backOffice --> frontOffice : отправка результата проверки
+
+        state acceptDepositRate <<choice>>
+
+        frontOffice --> acceptDepositRate : принятие решения по предложенной ставке на депозит
+        acceptDepositRate --> [*] : отказ
+        acceptDepositRate --> frontOffice : согласие
+        frontOffice --> ABS2 : внесение документов в систему
+    }
+}
+
+[*] --> credit
+
+state credit {
+    credit: "Оформление кредита"
+
+    state "Отделение банка (фронт-офис)" as frontOffice3
+    state "Кредитный конвейер" as creditConveyor
+    state "Отдел кредитования" as creditDepartment3
+    state "Система скоринга" as creditScoring
+    state "Система кредитной истории" as creditHistory
+    state "Автоматизированная банковская система" as ABS3
+
+    credit --> frontOffice3 : принятие заявки на кредит через фронт-офис
+    frontOffice3 --> ABS3 : внесение заявки в систему
+    ABS3 --> creditConveyor : обработка заявки
+    creditConveyor --> creditDepartment3 : отправка заявки на проверку
+    creditDepartment3 --> creditScoring : проверка скора клиента
+    creditScoring --> creditHistory : проверка кредитной истории
+    creditHistory --> creditScoring : результат запроса кредитной истории
+    creditScoring --> creditDepartment3 : отправка результата проверки
+    creditDepartment3 --> creditConveyor : обработка заявки
+    creditConveyor --> ABS3 : вердикт по заявке на выдачу кредита клиенту
+    ABS3 --> frontOffice3 : отправка результата проверки
+}
+@enduml

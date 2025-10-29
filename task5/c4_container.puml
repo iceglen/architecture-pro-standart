@@ -1,0 +1,53 @@
+@startuml Standart Bank System Container Diagram
+!include <C4/C4_Container>
+
+Person(user, "Client", "Accessing bank system through web site or internet banking system")
+
+System_Boundary(bank_system, "Standart Bank System") {
+    Container(api_gateway, "API Gateway", "HAProxy")
+    ContainerQueue(service_broker, "Service Broker", "MS SQL Service broker")
+    Container(legacy_abs, "Legacy ABS", "Delphi & PL/SQL")
+    Container(rates_service, "Rates service", "Java & Spring Boot")
+    Container(credit_engine, "Credit orchestration engine", "Camunda")
+    Container(lead_management, "Lead management system", "Processing applications from web-site", "Java & Spring Boot")
+    Container(application_service, "Application service", "Java & Spring Boot")
+    Container(scoring_adapter, "Scoring system adapter", ".NET 8")
+    Container(notification_service, "Notification service", ".NET 8")
+}
+
+System_Ext(call_center, "Call Center", "Java & Spring Boot")
+System_Ext(credit_conveyor, "Credit conveyor", "Python & Flask")
+System_Ext(scoring_system, "Scoring system", "Python & Flask")
+System_Ext(sms_gateway, "SMS Gateway")
+
+System_Ext(web, "Web site", "PHP & React.js")
+System_Ext(inet_bank, "Internet Banking", ".NET 8")
+
+Rel(user, web, "Creates credit application through web site")
+Rel(user, inet_bank, "Creates credit application through Internet Banking")
+
+Rel(web, api_gateway, "Registers credit application from web site")
+Rel(inet_bank, api_gateway, "Registers credit application from Internet Banking")
+
+Rel(api_gateway, lead_management, "Passing requests to lead management system")
+Rel(api_gateway, application_service, "Registers approved applications")
+Rel(api_gateway, rates_service, "Fetches rates information")
+
+Rel(application_service, credit_engine, "Starts credit application processing")
+Rel(credit_engine, service_broker, "Registers application in legacy system")
+Rel(credit_engine, scoring_adapter, "Fetches client's score from scoring system")
+Rel(credit_engine, notification_service, "Sends notifications to client")
+
+Rel(call_center, api_gateway, "Fetches leads and rates information")
+
+Rel(scoring_adapter, service_broker, "Fetches client's score from scoring system")
+Rel(legacy_abs, credit_conveyor, "Passing credit applications to credit conveyor")
+Rel(credit_conveyor, scoring_system, "Passing credit applications to scoring system")
+
+Rel(rates_service, service_broker, "Fetching rates from ABS system")
+Rel(legacy_abs, service_broker, "Listening for requests from service broker")
+
+Rel(notification_service, service_broker, "Sends notifications to client")
+Rel(legacy_abs, sms_gateway, "Sends SMS notifications to client")
+
+@enduml
