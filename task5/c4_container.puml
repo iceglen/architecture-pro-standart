@@ -4,24 +4,24 @@
 Person(user, "Client", "Accessing bank system through web site or internet banking system")
 
 System_Boundary(bank_system, "Standart Bank System") {
-    Container(api_gateway, "API Gateway")
-    ContainerQueue(service_broker, "Service Broker")
-    Container(legacy_abs, "Legacy ABS")
-    Container(rates_service, "Rates service")
+    Container(api_gateway, "API Gateway", "HAProxy")
+    ContainerQueue(service_broker, "Service Broker", "MS SQL Service broker")
+    Container(legacy_abs, "Legacy ABS", "Delphi & PL/SQL")
+    Container(rates_service, "Rates service", "Java & Spring Boot")
     Container(credit_engine, "Credit orchestration engine", "Camunda")
-    Container(lead_management, "Lead management system", "Processing applications from web-site")
-    Container(application_service, "Application service")
-    Container(scoring_adapter, "Scoring system adapter")
-    Container(notification_service, "Notification service")
+    Container(lead_management, "Lead management system", "Processing applications from web-site", "Java & Spring Boot")
+    Container(application_service, "Application service", "Java & Spring Boot")
+    Container(scoring_adapter, "Scoring system adapter", ".NET 8")
+    Container(notification_service, "Notification service", ".NET 8")
 }
 
-System_Ext(call_center, "Call Center")
-System_Ext(credit_conveyor, "Credit conveyor")
-System_Ext(scoring_system, "Scoring system")
+System_Ext(call_center, "Call Center", "Java & Spring Boot")
+System_Ext(credit_conveyor, "Credit conveyor", "Python & Flask")
+System_Ext(scoring_system, "Scoring system", "Python & Flask")
 System_Ext(sms_gateway, "SMS Gateway")
 
-System_Ext(web, "Web site")
-System_Ext(inet_bank, "Internet Banking")
+System_Ext(web, "Web site", "PHP & React.js")
+System_Ext(inet_bank, "Internet Banking", ".NET 8")
 
 Rel(user, web, "Creates credit application through web site")
 Rel(user, inet_bank, "Creates credit application through Internet Banking")

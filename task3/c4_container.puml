@@ -4,21 +4,21 @@
 Person(user, "Client", "Accessing bank system through web site or internet banking system")
 
 System_Boundary(bank_system, "Standart Bank System") {
-    Container(api_gateway, "API Gateway")
-    Container(application_service, "Application service")
-    ContainerQueue(service_broker, "Service Broker")
-    Container(legacy_abs, "Legacy ABS")
-    Container(credit_department, "Credit Department")
+    Container(api_gateway, "API Gateway", "HAProxy")
+    Container(application_service, "Application service", "Java & Spring Boot")
+    ContainerQueue(service_broker, "Service Broker", "MS SQL Service broker")
+    Container(legacy_abs, "Legacy ABS", "Delphi & PL/SQL")
+    Container(credit_department, "Credit Department", "Python & Flask")
 }
 
-System_Ext(web, "Web site")
-System_Ext(inet_bank, "Internet Banking")
+System_Ext(web, "Web site", "PHP & React.js")
+System_Ext(inet_bank, "Internet Banking", ".NET 8")
 System_Ext(sms_gateway, "SMS Gateway")
-System_Ext(call_center, "Call Center")
+System_Ext(call_center, "Call Center", "Java & Spring Boot")
 
 Rel(user, web, "Creates deposit application through web site")
 Rel(user, inet_bank, "Creates deposit application through internet banking")
-Rel(user, call_center, "Creates deposit application through call center")
+Rel(user, call_center, "Creates deposit application through call center", "VoIP")
 
 Rel(web, api_gateway, "Accessing system through gateway")
 Rel(inet_bank, api_gateway, "Accessing system through gateway")
